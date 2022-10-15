@@ -1,5 +1,7 @@
 const user = require("../models/user.auth.model");
 const encode = require("../services/secure/hash.password");
+
+
 const login = async(request,response)=>{
     return response.status(200).json({status:"ok",message:"welcome to login page"})
 };

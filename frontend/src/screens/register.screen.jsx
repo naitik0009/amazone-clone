@@ -1,23 +1,42 @@
 import { SafeAreaView,ScrollView, KeyboardAvoidingView, TouchableWithoutFeedback,Keyboard,Text ,View,TouchableOpacity,Platform} from "react-native";
+import { CreateUserContext } from "../context/auth/user.context";
 import {Button } from "@rneui/themed";
 import { TextInput} from 'react-native-paper';
 import { styles } from "../styles/register/styles";
+import React,{useState,useContext,useEffect, createContext} from "react";
 
-import React,{useState} from "react";
+import axios from "axios";
+
 
 export const RegisterScreen = ({navigation})=>{
+
  const [name,setName] = useState(null);
  const [email,setEmail] = useState(null);
  const [password,setPassword] = useState(null);
  const [hide,setHide] = useState(true);
-    return (
+const global = useContext(CreateUserContext);
+
+async function signUp(name,email,password){
+  try {
+    const client = axios.create({baseURL:global.url});
+    console.log(name,email,password,global);
+await client.post(`register`,{name,email,password}).then((response)=>{console.log(response.data)}).catch((error)=>{console.log(error.response.data)});
+
+
+  } catch (error) {
+    console.log(error.message);
+  }
+ }
+
+//  useEffect(()=>{signUp()},[]);
+
+  return (
         <SafeAreaView>
       <Text>Nepal.in</Text>
      
      <KeyboardAvoidingView   behavior={Platform.OS === "ios" ? "padding" : "height"}>
      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
      <ScrollView>
-     
      <View style={styles.container}>
      <Text style={styles.text}>Sign up</Text>
      <View>
@@ -26,10 +45,10 @@ export const RegisterScreen = ({navigation})=>{
          <TextInput left={<TextInput.Icon name="form-textbox-password" />}
          right={<TextInput.Icon onPress={()=>{setHide(!hide)}} name="eye" color={hide?"black":"red"}/>  }
          mode="outlined" secureTextEntry={hide?true:false} style = {styles.textInput} label="password" onChangeText={(password)=>{setPassword(password)}}/>
-         <Button style={styles.button} onPress={()=>{console.log(name,email,password)}} color = "warning">sign up</Button>
+         <Button style={styles.button} onPress={()=>{signUp(name,email,password)}} color = "warning">sign up</Button>
          </View>
          <View style={styles.dividerContainer}>
-             <View style={{flex:1,height:1,backgroundColor:"grey"}} />
+             <View style={{flex:1,height:1,backgroundColor:"grey"}}/>
           <Text style={styles.dividerText}>Already have an account ?</Text>
           <View style={{flex:1,height:1,backgroundColor:"grey"}} />
          </View>
