@@ -9,6 +9,6 @@ app.use(express.json());
 
 app.get("/",(request,response)=>{response.send("hello world")});
 app.use("/api/v3",userRoute);
-app.listen(port,"0.0.0.0",()=>{
+app.listen(port,()=>{
     connect(url).then(()=>{console.log("connected to the server & database",port);});
 });
