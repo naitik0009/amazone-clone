@@ -23,7 +23,9 @@ async function signUp(name,email,password){
     const client = axios.create({baseURL:global.url});
     console.log(name,email,password,global);
 await client.post(`register`,{name,email,password}).then((response)=>{alert(response.data.message);  setInterval(()=>{setLoading(false);},3000);}).catch((error)=>{
-alert(error.response.data.message);
+  setInterval(()=>{setLoading(false);},3000)
+
+  alert(error.response.data.message);
 });
 
 

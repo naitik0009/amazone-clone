@@ -21,7 +21,9 @@ export const LoginScreen = ({navigation})=>{
           setLoading(true);
           await client.post(`login`,{email,password}).then((response)=>{alert(response.data.message);
             setInterval(()=>{setLoading(false);},3000);
-        }).catch((error)=>{console.log(error.response.data.message)
+        }).catch((error)=>{
+            setInterval(()=>{setLoading(false);},3000)
+            console.log(error.response.data.message)
         
          alert(error.response.data.message)
           });
