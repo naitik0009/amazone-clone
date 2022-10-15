@@ -1,4 +1,4 @@
-import { SafeAreaView ,Text ,ScrollView,View,TouchableOpacity, KeyboardAvoidingView, TouchableWithoutFeedback,Keyboard} from "react-native";
+import { SafeAreaView ,Text ,ScrollView,View,TouchableOpacity, KeyboardAvoidingView, TouchableWithoutFeedback,Keyboard,ActivityIndicator} from "react-native";
 import { Image } from "react-native";
 import { styles } from "../styles/login/style";
 import {Button } from "@rneui/themed";
@@ -13,15 +13,18 @@ export const LoginScreen = ({navigation})=>{
     const [email,setEmail] = useState(null);
     const [password,setPassword] = useState(null);
     const [hide,setHide] = useState(true);
-
+    const [isLoading,setLoading] = useState(false);
     async function signIn(email,password){
 
         try {
           const client = axios.create({baseURL:global.url});
-          console.log(email,password,global.url);
-      await client.post(`login`,{email,password}).then((response)=>{alert(response.data.message)}).catch((error)=>{console.log(error.response.data.message)
-      alert(error.response.data.message);
-      });
+          setLoading(true);
+          await client.post(`login`,{email,password}).then((response)=>{alert(response.data.message);
+            setInterval(()=>{setLoading(false);},3000);
+        }).catch((error)=>{console.log(error.response.data.message)
+        
+         alert(error.response.data.message)
+          });
         } catch (error) {
           console.log(error.message);
         }
@@ -32,7 +35,7 @@ export const LoginScreen = ({navigation})=>{
          <Image source={url} style={{width:300,height:60,justifyContent:"center",alignSelf:"center",marginTop:20}}/>
      <KeyboardAvoidingView   behavior={Platform.OS === "ios" ? "padding" : "height"}>
      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView>
+       {isLoading?  <ActivityIndicator style={{alignSelf:"center",marginTop:200}} size="small" color="#0000ff" /> : <ScrollView>
         <View style={styles.container}>
         <Text style={styles.text}>Sign in</Text>
         <View>
@@ -49,7 +52,7 @@ export const LoginScreen = ({navigation})=>{
         <View style={{alignItems:"center",marginTop:20,}}>
         <Button style={styles.signup} onPress={()=>{navigation.navigate("Register")}} color = "warning">Create your Amazone Account</Button>
         </View>
-        </ScrollView>
+        </ScrollView>}
         </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
 
