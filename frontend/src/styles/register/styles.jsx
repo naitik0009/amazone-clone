@@ -6,10 +6,10 @@ export const styles = StyleSheet.create({
     container:{
         width:width/4*2*1.9,
         height:height/2*1.5,
-        marginLeft:5,
+        marginLeft:7,
         alignItems:"center",
         justifyContent:"center",
-        marginTop:50,
+        marginTop:40,
         borderWidth:1,
         borderColor:"grey",
     },

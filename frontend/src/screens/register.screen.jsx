@@ -4,9 +4,9 @@ import {Button } from "@rneui/themed";
 import { TextInput} from 'react-native-paper';
 import { styles } from "../styles/register/styles";
 import React,{useState,useContext,useEffect, createContext} from "react";
-
+import { Image } from "react-native";
 import axios from "axios";
-
+const url = require("../assets/logo.png");
 
 export const RegisterScreen = ({navigation})=>{
 
@@ -20,7 +20,9 @@ async function signUp(name,email,password){
   try {
     const client = axios.create({baseURL:global.url});
     console.log(name,email,password,global);
-await client.post(`register`,{name,email,password}).then((response)=>{console.log(response.data)}).catch((error)=>{console.log(error.response.data)});
+await client.post(`register`,{name,email,password}).then((response)=>{console.log(response.data)}).catch((error)=>{console.log(error.response.data)
+alert(error.response.data.message);
+});
 
 
   } catch (error) {
@@ -28,11 +30,9 @@ await client.post(`register`,{name,email,password}).then((response)=>{console.lo
   }
  }
 
-//  useEffect(()=>{signUp()},[]);
-
   return (
         <SafeAreaView>
-      <Text>Nepal.in</Text>
+      <Image source={url} style={{width:300,height:60,justifyContent:"center",alignSelf:"center",marginTop:20}}/>
      
      <KeyboardAvoidingView   behavior={Platform.OS === "ios" ? "padding" : "height"}>
      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
