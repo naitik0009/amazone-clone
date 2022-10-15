@@ -1,4 +1,4 @@
-import { SafeAreaView,ScrollView, KeyboardAvoidingView, TouchableWithoutFeedback,Keyboard,Text ,View,TouchableOpacity,Platform} from "react-native";
+import { SafeAreaView,ScrollView, KeyboardAvoidingView,ActivityIndicator, TouchableWithoutFeedback,Keyboard,Text ,View,TouchableOpacity,Platform} from "react-native";
 import { CreateUserContext } from "../context/auth/user.context";
 import {Button } from "@rneui/themed";
 import { TextInput} from 'react-native-paper';
@@ -14,19 +14,21 @@ export const RegisterScreen = ({navigation})=>{
  const [email,setEmail] = useState(null);
  const [password,setPassword] = useState(null);
  const [hide,setHide] = useState(true);
+ const [isLoading,setLoading] = useState(false);
 const global = useContext(CreateUserContext);
 
 async function signUp(name,email,password){
   try {
+    setLoading(true);
     const client = axios.create({baseURL:global.url});
     console.log(name,email,password,global);
-await client.post(`register`,{name,email,password}).then((response)=>{console.log(response.data)}).catch((error)=>{console.log(error.response.data)
+await client.post(`register`,{name,email,password}).then((response)=>{alert(response.data.message);  setInterval(()=>{setLoading(false);},3000);}).catch((error)=>{
 alert(error.response.data.message);
 });
 
 
   } catch (error) {
-    console.log(error.message);
+    alert(error.message);
   }
  }
 
@@ -36,7 +38,7 @@ alert(error.response.data.message);
      
      <KeyboardAvoidingView   behavior={Platform.OS === "ios" ? "padding" : "height"}>
      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-     <ScrollView>
+    {isLoading?  <ActivityIndicator size="small" style={{alignSelf:"center",marginTop:200}} color="#0000ff" /> : <ScrollView>
      <View style={styles.container}>
      <Text style={styles.text}>Sign up</Text>
      <View>
@@ -54,7 +56,7 @@ alert(error.response.data.message);
          </View>
        <TouchableOpacity onPress={()=>{navigation.navigate("Login")}}><Text style={{color:"blue"}}>{"Sign in >"} </Text></TouchableOpacity>
      </View>
-   </ScrollView>
+   </ScrollView>}
    </TouchableWithoutFeedback>
      </KeyboardAvoidingView>
 
