@@ -2,7 +2,7 @@ import { SafeAreaView ,Text ,ScrollView,View,TouchableOpacity, KeyboardAvoidingV
 import { Image } from "react-native";
 import { styles } from "../styles/login/style";
 import {Button } from "@rneui/themed";
-import { TextInput} from 'react-native-paper';
+import { TextInput , HelperText} from 'react-native-paper';
 import React,{useState,useContext} from "react";
 import { CreateUserContext } from "../context/auth/user.context";
 import axios from "axios";
@@ -14,6 +14,7 @@ export const LoginScreen = ({navigation})=>{
     const [password,setPassword] = useState(null);
     const [hide,setHide] = useState(true);
     const [isLoading,setLoading] = useState(false);
+
     async function signIn(email,password){
 
         try {
@@ -41,9 +42,9 @@ export const LoginScreen = ({navigation})=>{
         <View style={styles.container}>
         <Text style={styles.text}>Sign in</Text>
         <View>
-            <TextInput style = {styles.textInput} onChangeText={(email)=>{setEmail(email)}} mode="outlined" label="email" placeholder="email"/>
+            <TextInput   style = {styles.textInput} onChangeText={(email)=>{setEmail(email)}}  mode="outlined" label="email" placeholder="email"/>
             <TextInput style = {styles.textInput} onChangeText={(password)=>{setPassword(password)}}  right={<TextInput.Icon onPress={()=>{setHide(!hide)}} name="eye" color={hide?"black":"red"}/>  } mode="outlined" label="password" placeholder="password"  secureTextEntry={hide?true:false}/>
-            <Button style={styles.button} onPress={()=>{signIn(email,password)}} color = "warning">sign in</Button>
+            <Button style={styles.button} onPress={()=>{signIn(email,password).then(()=>{global.setLogIn(true)})}} color = "warning">sign in</Button>
             </View>
         </View>
         <View style={styles.dividerContainer}>
