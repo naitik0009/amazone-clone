@@ -1,35 +1,56 @@
 import { SafeAreaView ,Text ,ScrollView,View,TouchableOpacity, KeyboardAvoidingView, TouchableWithoutFeedback,Keyboard,ActivityIndicator} from "react-native";
 import { Image } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles } from "../styles/login/style";
 import {Button } from "@rneui/themed";
 import { TextInput , HelperText} from 'react-native-paper';
 import React,{useState,useContext} from "react";
 import { CreateUserContext } from "../context/auth/user.context";
-import axios from "axios";
+
 const url = require("../assets/logo.png");
 
 export const LoginScreen = ({navigation})=>{
-    const global = useContext(CreateUserContext);
+    
     const [email,setEmail] = useState(null);
     const [password,setPassword] = useState(null);
     const [hide,setHide] = useState(true);
     const [isLoading,setLoading] = useState(false);
 
+    const storaHouse = async (token,state)=>{
+        try {
+            await AsyncStorage.setItem("data",JSON.stringify(token));
+            await AsyncStorage.setItem("state",JSON.stringify(state));
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
+
     async function signIn(email,password){
 
         try {
-          const client = axios.create({baseURL:global.url});
-          setLoading(true);
-          await client.post(`login`,{email,password}).then((response)=>{alert(response.data.message);
-            setInterval(()=>{setLoading(false);},3000);
-        }).catch((error)=>{
-            setInterval(()=>{setLoading(false);},3000)
-            console.log(error.response.data.message)
-        
-         alert(error.response.data.message)
-          });
-        } catch (error) {
+        setLoading(true);
+        const response = await  fetch('http://192.168.1.66:3001/api/v3/user/login', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email,password
+            })});
+
+            const data = await response.json();
+            if(data.status==="ok"){
+                storaHouse("abcd","yes");
+                alert(data.message);
+                
+            }
+        }
+         catch (error) {
           console.log(error.message);
+        }finally{
+            setLoading(false);
         }
        }
 
@@ -44,7 +65,7 @@ export const LoginScreen = ({navigation})=>{
         <View>
             <TextInput   style = {styles.textInput} onChangeText={(email)=>{setEmail(email)}}  mode="outlined" label="email" placeholder="email"/>
             <TextInput style = {styles.textInput} onChangeText={(password)=>{setPassword(password)}}  right={<TextInput.Icon onPress={()=>{setHide(!hide)}} name="eye" color={hide?"black":"red"}/>  } mode="outlined" label="password" placeholder="password"  secureTextEntry={hide?true:false}/>
-            <Button style={styles.button} onPress={()=>{signIn(email,password).then(()=>{global.setLogIn(true)})}} color = "warning">sign in</Button>
+            <Button style={styles.button} onPress={()=>{signIn(email,password)}} color = "warning">sign in</Button>
             </View>
         </View>
         <View style={styles.dividerContainer}>

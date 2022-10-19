@@ -15,24 +15,41 @@ export const RegisterScreen = ({navigation})=>{
  const [password,setPassword] = useState(null);
  const [hide,setHide] = useState(true);
  const [isLoading,setLoading] = useState(false);
-const global = useContext(CreateUserContext);
+
 
 async function signUp(name,email,password){
+ 
+  
   try {
     setLoading(true);
-    const client = axios.create({baseURL:global.url});
-    console.log(name,email,password,global);
-await client.post(`register`,{name,email,password}).then((response)=>{alert(response.data.message);  setInterval(()=>{setLoading(false);},3000);}).catch((error)=>{
-  setInterval(()=>{setLoading(false);},3000)
+    const response = await  fetch('http://192.168.1.66:3001/api/v3/user/register', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name,email,password
+        })});
 
-  alert(error.response.data.message);
-});
+        const data = await response.json();
+        if(data.status==="ok"){
+            
+            alert(data.message);
+            
+        }
+    }
+     catch (error) {
+      console.log(error.message);
+    }finally{
+        setLoading(false);
+    }
+   }
 
 
-  } catch (error) {
-    alert(error.message);
-  }
- }
+
+
+
 
   return (
         <SafeAreaView>

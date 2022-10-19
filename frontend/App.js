@@ -1,14 +1,25 @@
 import { StatusBar } from 'expo-status-bar';
-import React,{useContext} from 'react';
+import React,{useState} from 'react';
 import { LoginScreen } from './src/screens/logjn.screen';
 import  HomeScreen  from './src/screens/home.screen';
 import { RegisterScreen } from './src/screens/register.screen';
 import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import { CreateUserContext, UserProvider } from './src/context/auth/user.context';
+import {  UserProvider } from './src/context/auth/user.context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export default function App() {
+
   const Stack = createNativeStackNavigator();
-  const loggedInState = useContext(CreateUserContext);
+  const [login,setLogin] = useState(null);
+  const getStoreData = async ()=>{
+    const data = await AsyncStorage.getItem("state");
+    console.log(data);
+    if(JSON.parse(data) === "yes"){
+      setLogin("yes");
+    }
+  }
+  getStoreData();
   return (
 
     <>
@@ -16,9 +27,9 @@ export default function App() {
   <NavigationContainer>
     <UserProvider>
   <Stack.Navigator screenOptions={{headerShown:false}}>
-    <Stack.Screen name="Home" component={loggedInState.isLoggedIn? HomeScreen :LoginScreen}  />
-    <Stack.Screen name="Login" component={loggedInState.isLoggedIn? HomeScreen: LoginScreen}  />
-    <Stack.Screen name="Register" component={loggedInState.isLoggedIn ?HomeScreen : RegisterScreen}  />
+    {login != null?<Stack.Screen name="Home" component={HomeScreen }  />:console.log("please login first")}
+    <Stack.Screen name="Login" component={LoginScreen}  />
+    <Stack.Screen name="Register" component={RegisterScreen}  />
   </Stack.Navigator>
 
   </UserProvider>
