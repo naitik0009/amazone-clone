@@ -1,11 +1,11 @@
-import { SafeAreaView ,Text ,ScrollView,View,TouchableOpacity, KeyboardAvoidingView, TouchableWithoutFeedback,Keyboard,ActivityIndicator} from "react-native";
+import { SafeAreaView ,Text ,ScrollView,View, KeyboardAvoidingView, TouchableWithoutFeedback,Keyboard,ActivityIndicator} from "react-native";
 import { Image } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles } from "../styles/login/style";
 import {Button } from "@rneui/themed";
 import { TextInput , HelperText} from 'react-native-paper';
-import React,{useState,useContext} from "react";
-import { CreateUserContext } from "../context/auth/user.context";
+import React,{useState} from "react";
+
 
 const url = require("../assets/logo.png");
 
